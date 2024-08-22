@@ -14,7 +14,7 @@ trait PreventsCircularRecursion
 
         $onceable = Onceable::tryFromTrace($trace, $callback);
 
-        if (isset($onceable->hash[$this->recursed]) {
+        if (isset($this->recursed[$onceable->hash]) {
             return \value($default);
         }
 
