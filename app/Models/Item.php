@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Item extends Model
 {
-    use AvoidsCircularReference;
+    use PreventsCircularRecursion;
 
     public function item(): BelongsTo
     {
