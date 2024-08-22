@@ -7,23 +7,23 @@ use Illuminate\Support\Onceable;
 trait PreventsCircularRecursion
 {
     // recursion stack
-    protected $recursed = [];
+    protected $recursionCache = [];
 
     protected function withoutRecursion($callback, $default = null) {
-        $trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
+        $trace = \debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
 
         $onceable = Onceable::tryFromTrace($trace, $callback);
 
-        if (isset($this->recursed[$onceable->hash]) {
+        if (isset($this->recursionCache[$onceable->hash])) {
             return \value($default);
         }
 
-        $this->recursed[$onceable->hash] = true;
+        $this->recursionCache[$onceable->hash] = true;
 
         try {
             return \call_user_func($callback);
         } finally {
-            unset($this->recursed[$onceable->hash]);
+            unset($this->recursionCache[$onceable->hash]);
         }
     }
 
