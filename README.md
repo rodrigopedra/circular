@@ -15,5 +15,22 @@ composer install
 cp .env.example .env
 php artisan key:generate
 php artisan migrate
+```
+
+## Execution
+
+There are two commands defined within `./routes/console.php`
+
+```bash
 php artisan circular
 ```
+
+and
+
+```bash
+php artisan shared
+```
+
+This last ones builds up on a comment on the thread.
+
+### Notes
