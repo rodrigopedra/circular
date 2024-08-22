@@ -9,19 +9,22 @@ trait PreventsCircularRecursion
     // recursion stack
     protected $recursionCache = [];
 
-    protected function withoutRecursion($callback, $default = null) {
-        $trace = \debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
+    protected function withoutRecursion($callback, $default = null)
+    {
+        $trace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
 
         $onceable = Onceable::tryFromTrace($trace, $callback);
 
         if (isset($this->recursionCache[$onceable->hash])) {
-            return \value($default);
+            return is_callable($this->recursionCache[$onceable->hash])
+                ? $this->recursionCache[$onceable->hash] = call_user_func($this->recursionCache[$onceable->hash])
+                : $this->recursionCache[$onceable->hash];
         }
 
-        $this->recursionCache[$onceable->hash] = true;
+        $this->recursionCache[$onceable->hash] = $default;
 
         try {
-            return \call_user_func($callback);
+            return call_user_func($callback);
         } finally {
             unset($this->recursionCache[$onceable->hash]);
         }
